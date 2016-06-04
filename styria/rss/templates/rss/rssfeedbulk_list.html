@@ -1,0 +1,72 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'rss/style.css' %}" />	
+<div class="">
+
+    <div class="">
+		{% if rssfeedbulk_list_earliest %}
+		{% for feed in rssfeedbulk_list_earliest %}
+        <article class="" >
+			<a href="{{ feed.href }}"><h1>{{ feed.title }}</h1></a>
+			<figure>
+				{% if feed.img_src %}
+				<img src="{{ feed.img_src }}" />
+				{% else %}
+				<img src="http://icons.iconarchive.com/icons/guillendesign/variations-3/256/Default-Icon-icon.png" style="width:100px; height:66px;" />
+				{% endif %}
+				<figcaption>
+					<p>Datum objave:</p>
+					<time datetime="2016-06-01 00:00:00">{{ feed.pub_date }}</time>
+					<p>Autor:</p>
+					<span class="author">{{ feed.author }}</span>
+				</figcaption>
+			</figure>
+		</article>
+		{% endfor %}
+		
+		{% else %}
+		<ul>
+			<li>No feeds yet.</li>
+		</ul>
+		{% endif %}
+	</div>
+</div>
+
+{% if is_paginated %}
+  <nav>
+    <ul class="pagination">
+      {% if page_obj.has_previous %}
+        <li>
+          <a href="?page={{ page_obj.previous_page_number }}">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href="#">
+            <span>Previous</span>
+          </a>
+        </li>
+      {% endif %}
+
+      {% for page in paginator.page_range %}
+        <li {% if page == page_obj.number %}class="active"{% endif %}>
+          <a href="?page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <li>
+          <a href="?page={{ page_obj.next_page_number }}">
+            <span>Next</span>
+          </a>
+        </li>
+      {% else %}
+        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+          <a href="#">
+            <span>Next</span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

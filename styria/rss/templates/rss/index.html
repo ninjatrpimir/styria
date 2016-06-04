@@ -1,0 +1,20 @@
+{% if rss_list %}
+    <ul>
+    {% for rss in rss_list %}
+        <li><a href="{{ rss.address }}">{{ rss.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No rss are available.</p>
+{% endif %}
+
+<h1>Submit your data</h1>
+<!--
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+-->
+
+<form action="/rss/rssbasic.html" method="post">
+{% csrf_token %}
+{{ form }}
+<input type="submit" value="Submit" />
+</form>
