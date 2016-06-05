@@ -24,16 +24,16 @@ SECRET_KEY = 'xz)w4xw0r*+pkji8#n!zbp#!9*z+azh50w$0+$qzi%q^xb3je0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+#DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.1:3336']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-#	'dal',
-#	'dal_select2',
-    'rss.apps.RssConfig',
+	'rss.apps.RssConfig',
+	'dal',
+	'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

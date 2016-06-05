@@ -6,6 +6,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.views.generic.edit import FormView
+from dal import autocomplete
 
 
 from .models import RssInput, RssFeedBulk
@@ -32,7 +33,6 @@ class RssList(ListView):
 class RssDelete():
 	model = RssInput
 
-#postavi post u glavni class
 class RssBasic(FormView, SingleObjectMixin):
 	template_name = 'rss/rssinput_list.html'
 	form_class = RssBasicForm
@@ -69,6 +69,7 @@ class RssEntry(ListView):
 			rssfeedbulk_list_earliest = paginator.page(paginator.num_pages)
 
 		context['rssfeedbulk_list_earliest'] = rssfeedbulk_list_earliest
+		
 		return context
 		
 class RssCategory(ListView):
@@ -76,13 +77,12 @@ class RssCategory(ListView):
 	template_name = 'rss/rsscategory_list.html'
 	paginate_by = 20
 	
-	
 	def get_context_data(self, **kwargs):
 		context = super(RssCategory, self).get_context_data(**kwargs)
-		#self.category = self.request.GET.get('category')
-		#category = self.category
-		#rss_category_list = RssFeedBulk.objects.filter(category=self.category)
-		rss_category_list = RssFeedBulk.objects.filter(category='Tech')
+		
+		rss_category_list = RssFeedBulk.objects.filter(category=self.kwargs['category'])
+		rss_all_categories = RssFeedBulk.objects.all_categories()
+		
 		paginator = Paginator(rss_category_list, self.paginate_by)
 
 		page = self.request.GET.get('page')
@@ -93,12 +93,38 @@ class RssCategory(ListView):
 			rss_category_list = paginator.page(1)
 		except EmptyPage:
 			rss_category_list = paginator.page(paginator.num_pages)
-
-		rss_all_categories = RssFeedBulk.objects.all_categories() 
+		
 		context['rss_category_list'] = rss_category_list
 		context['rss_all_categories'] = rss_all_categories
+		
 		return context
+		
+class AuthorAutocomplete(autocomplete.Select2QuerySetView):
+	template_name = 'rss/authorcomplete.html'
+	model = RssFeedBulk
 	
+	
+	def get_context_data(self, **kwargs):
+		search_qs = RssFeedBulk.objects.filter(author__startswith=request.REQUEST['search'])
+		results = []
+		for r in search_qs:
+			results.append(r.author)
+		resp = request.REQUEST['callback'] + '(' + simplejson.dumps(result) + ');'
+		context['resp'] = resp
+		
+		return context
+	"""
+	def get_context_data(self, **kwargs):
+		context = super(RssList, self).get_context_data(**kwargs)
+		form = AuthorForm
+		context['form'] = form
+		return context
+		
+		
+	
+	"""	
+
+
 """	
 def index(request):
     form = RssForm()

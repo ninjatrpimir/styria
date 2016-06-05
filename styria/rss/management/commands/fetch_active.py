@@ -60,7 +60,7 @@ class Command(BaseCommand):
 							href = self.list[1],
 							img_src = self.list[2],
 							pub_date = self.list[3],
-							author = self.list[4],
+							authors = self.list[4],
 							category = self.list[5])
 			f.save()
 			

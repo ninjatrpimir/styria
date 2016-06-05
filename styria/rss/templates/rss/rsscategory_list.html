@@ -3,7 +3,9 @@
 	{% if rss_all_categories %}
 	<ul>
 	{% for category in rss_all_categories %}
-	<a href="https://"><li>{{ category }}</li></a>
+	{% url 'rss:rss-category' category as the_url %}
+	<a href="{{ the_url }}"><li>{{ category }}</li></a>
+	
 	{% endfor %}
 	</ul>
 	{% endif %}
@@ -41,9 +43,9 @@
 {% if is_paginated %}
   <nav>
     <ul class="pagination">
-      {% if page_obj.has_previous %}
+      {% if rss_category_list.has_previous %}
         <li>
-          <a href="?page={{ page_obj.previous_page_number }}">
+          <a href="?page={{ rss_category_list.previous_page_number }}">
             <span>Previous</span>
           </a>
         </li>
@@ -56,19 +58,19 @@
       {% endif %}
 
       {% for page in paginator.page_range %}
-        <li {% if page == page_obj.number %}class="active"{% endif %}>
+        <li {% if page == rss_category_list.number %}class="active"{% endif %}>
           <a href="?page={{ page }}">{{ page }}</a>
         </li>
       {% endfor %}
 
-      {% if page_obj.has_next %}
+      {% if rss_category_list.has_next %}
         <li>
-          <a href="?page={{ page_obj.next_page_number }}">
+          <a href="?page={{ rss_category_list.next_page_number }}">
             <span>Next</span>
           </a>
         </li>
       {% else %}
-        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+        <li {% if not rss_category_list.has_next %}class="disabled"{% endif %}>
           <a href="#">
             <span>Next</span>
           </a>

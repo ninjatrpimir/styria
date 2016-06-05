@@ -6,7 +6,8 @@
 		{% if rssfeedbulk_list_earliest %}
 		{% for feed in rssfeedbulk_list_earliest %}
         <article class="" >
-			<a href="{{ feed.href }}"><h1>{{ feed.title }}</h1></a>
+			{% url 'rss:rss-category' feed.category as the_url %}
+			<a href="{{ the_url }}"><h1>{{ feed.title }}</h1></a>
 			<figure>
 				{% if feed.img_src %}
 				<img src="{{ feed.img_src }}" />
@@ -34,9 +35,9 @@
 {% if is_paginated %}
   <nav>
     <ul class="pagination">
-      {% if page_obj.has_previous %}
+      {% if rssfeedbulk_list_earliest.has_previous %}
         <li>
-          <a href="?page={{ page_obj.previous_page_number }}">
+          <a href="?page={{ rssfeedbulk_list_earliest.previous_page_number }}">
             <span>Previous</span>
           </a>
         </li>
@@ -49,19 +50,19 @@
       {% endif %}
 
       {% for page in paginator.page_range %}
-        <li {% if page == page_obj.number %}class="active"{% endif %}>
+        <li {% if page == rssfeedbulk_list_earliest.number %}class="active"{% endif %}>
           <a href="?page={{ page }}">{{ page }}</a>
         </li>
       {% endfor %}
 
-      {% if page_obj.has_next %}
+      {% if rssfeedbulk_list_earliest.has_next %}
         <li>
-          <a href="?page={{ page_obj.next_page_number }}">
+          <a href="?page={{ rssfeedbulk_list_earliest.next_page_number }}">
             <span>Next</span>
           </a>
         </li>
       {% else %}
-        <li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+        <li {% if not rssfeedbulk_list_earliest.has_next %}class="disabled"{% endif %}>
           <a href="#">
             <span>Next</span>
           </a>
